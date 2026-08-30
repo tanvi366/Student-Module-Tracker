@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Career Tracker</title>
+
+    <link
+        rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Student Career Tracker</h1>
+        <p>Track your internships and job applications.</p>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Add Application</h2>
+            <form id="application-form">
+                <input type="text" id="company" placeholder="company" required>
+                <input type="text" id="role" placeholder="Job Role" required>
+                <input type="text" id="location" placeholder="Location">
+                <select id="status">
+                    <option value="Applied">Applied</option>
+                    <option value="Online Assessment">Online Assessment</option>
+                    <option value="Interview">Interview</option>
+                    <option value="Offer">Offer</option>
+                    <option value="Rejected">Rejected</option>
+                </select>
+                <label for="application_date">Application Date</label>
+                <input type="date" id="application-date" required>
+                <input type="url" id="job-url" placeholder="Job posting URL (optional)">
+                <textarea id="notes" placeholder="Notes (optional)"></textarea>"
+                <button type="submit">Add Application</button>
+            </form>
+        </section>
+        <h2>Your Applications</h2>
+        <div id="applications-container">
+            Loading applications...
+        </div>
+    </main>
+
+        <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+</html>
