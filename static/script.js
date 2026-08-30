@@ -62,6 +62,7 @@ async function loadApplications() {
         return;
     }
     updateDashboard(applications);
+    updateChart(applications);
     filteredApplications.forEach(application => {
 
         const  card = document.createElement("div");
@@ -118,6 +119,24 @@ function updateDashboard(applications){
     document.getElementById("interviews").textContent = interviews;
     const offers = applications.filter(application => application.status.trim().toLowerCase() === "Offer").length;
     document.getElementById("offers").textContent = offers;
+}
+
+let statusChart;
+function updateChart(applications){
+    const statuses = ["Applied", "Online Assessment", "Interview", "Offer", "Rejected"];
+    const counts = statuses.map(status => {return applications.filter(application => 
+        application.status.trim().toLowerCase() === status.toLowerCase()).length;
+    });
+
+    if (statusChart){
+        statusChart.destroy();
+    }
+    const ctx = document.getElementById("status-chart");
+    statusChart = new Chart(ctx, {
+        type: "doughnut",
+        data: {labels: statuses, datasets: [{data: counts, backgroundColor: ["blue","orange","purple","green","red"], borderColor:"#ffffff", borderWidth: 2}]},
+        options:{responsive: true, plugins: {legend: {position: "bottom"}}}
+    });
 }
 
 document.getElementById("search").addEventListener("input", loadApplications);
