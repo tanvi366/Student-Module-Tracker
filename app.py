@@ -27,6 +27,12 @@ def init_db():
     conn.commit()
     conn.close()
 
+def alter_db():
+    conn = get_db_connection()
+    conn.execute(" ALTER TABLE applications ADD COLUMN deadline TEXT")
+    conn.commit()
+    conn.close()
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -54,14 +60,15 @@ def create_application():
     location = data.get("location")
     status = data.get("status", "Applied")
     application_date = data.get("application_date")
+    deadline = data.get("deadline")
     job_url = data.get("job_url")
     notes = data.get("notes")
 
     conn = get_db_connection()
 
     cursor = conn.execute("""
-        INSERT INTO applications(company,role,location,status,application_date,job_url,notes) VALUES(?,?,?,?,?,?,?)""",
-        (company,role,location,status,application_date,job_url,notes))
+        INSERT INTO applications(company,role,location,status,application_date,job_url,notes,deadline) VALUES(?,?,?,?,?,?,?,?)""",
+        (company,role,location,status,application_date,job_url,notes,deadline))
 
     conn.commit()
     new_id = cursor.lastrowid
@@ -94,4 +101,5 @@ def update_applications(id):
 
 if __name__ == "__main__":
     init_db()
+    #alter_db()
     app.run(debug=True)

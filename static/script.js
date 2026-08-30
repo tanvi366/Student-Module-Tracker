@@ -9,6 +9,7 @@ form.addEventListener("submit", async function(event) {
         location: document.getElementById("location").value,
         status: document.getElementById("status").value,
         application_date: document.getElementById("application-date").value,
+        deadline: document.getElementById("deadline").value,
         job_url: document.getElementById("job-url").value,
         notes: document.getElementById("notes").value
     };
@@ -29,11 +30,11 @@ form.addEventListener("submit", async function(event) {
     }
 });
 
-
 async function loadApplications() {
     const response = await fetch("/api/applications");
 
     const applications = await response.json();
+    updateDeadlineNotifications(applications);
 
     const container = document.getElementById(
         "applications-container"
@@ -117,7 +118,7 @@ function updateDashboard(applications){
     document.getElementById("total-applications").textContent = applications.length;
     const interviews = applications.filter(application => application.status.trim().toLowerCase() === "interview").length;
     document.getElementById("interviews").textContent = interviews;
-    const offers = applications.filter(application => application.status.trim().toLowerCase() === "Offer").length;
+    const offers = applications.filter(application => application.status.trim().toLowerCase() === "offer").length;
     document.getElementById("offers").textContent = offers;
 }
 
@@ -136,6 +137,51 @@ function updateChart(applications){
         type: "doughnut",
         data: {labels: statuses, datasets: [{data: counts, backgroundColor: ["blue","orange","purple","green","red"], borderColor:"#ffffff", borderWidth: 2}]},
         options:{responsive: true, plugins: {legend: {position: "bottom"}}}
+    });
+}
+
+function updateDeadlineNotifications(applications){
+    const notificationContainer = document.getElementById("deadline-notifications");
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    const urgentApplications = applications.filter(application => {
+        if(!application.deadline){
+            return false;
+        }
+        const deadline = new Date(application.deadline);
+        deadline.setHours(0,0,0,0);
+        const differenceInMilliseconds = deadline - today;
+        const daysUntilDeadline = Math.ceil(differenceInMilliseconds/(1000*60*60*24));
+        return(daysUntilDeadline >= 0 && daysUntilDeadline <= 3);
+    });
+    notificationContainer.innerHTML = "";
+    if (urgentApplications.length === 0){
+        return;
+    }
+    notificationContainer.innerHTML = `<h3>⚠️ Upcoming Deadlines</h3>`;
+
+    urgentApplications.forEach(application => {
+        const deadline = new Date(application.deadline);
+        const today = new Date();
+        const differenceInMilliseconds = deadline - today;
+        const daysUntilDeadline = Math.ceil(differenceInMilliseconds/(1000*60*60*24));
+
+        let message;
+        if(daysUntilDeadline === 0){
+            message = "Deadline is today!";
+        } else if (daysUntilDeadline === 1){
+            message = "Deadline is tomorrow!";
+        } else {
+            message = `${daysUntilDeadline} days remaining`;
+        }
+        notificationContainer.innerHTML += `
+        <div class="deadline-alert">
+        <strong>${application.company}</strong> 
+        - ${application.role} 
+        <span>${message}</span>
+        </div>`;
+
     });
 }
 
