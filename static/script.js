@@ -61,9 +61,10 @@ async function loadApplications() {
         `;
         return;
     }
-
+    updateDashboard(applications);
     filteredApplications.forEach(application => {
-        const card = document.createElement("div");
+
+        const  card = document.createElement("div");
 
         card.classList.add("application-card");
 
@@ -94,7 +95,6 @@ async function loadApplications() {
 
 }
 
-
 async function deleteApplication(id) {
     const confirmed = confirm(
         "Are you sure you want to delete this application?"
@@ -110,6 +110,14 @@ async function deleteApplication(id) {
     );
 
     loadApplications();
+}
+
+function updateDashboard(applications){
+    document.getElementById("total-applications").textContent = applications.length;
+    const interviews = applications.filter(application => application.status.trim().toLowerCase() === "interview").length;
+    document.getElementById("interviews").textContent = interviews;
+    const offers = applications.filter(application => application.status.trim().toLowerCase() === "Offer").length;
+    document.getElementById("offers").textContent = offers;
 }
 
 document.getElementById("search").addEventListener("input", loadApplications);

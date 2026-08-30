@@ -148,3 +148,21 @@ button {
     }
 }
 
+.dashboard {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-card {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid #ddd;
+}
+
+.stat-card p {
+    font-size: 28px;
+    font-weight: bold;
+}
