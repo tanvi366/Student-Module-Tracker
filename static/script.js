@@ -1,5 +1,5 @@
 const form = document.getElementById("application-form");
-
+let editingId = null;
 form.addEventListener("submit", async function(event) {
     event.preventDefault();
 
@@ -38,6 +38,14 @@ async function loadApplications() {
     const container = document.getElementById(
         "applications-container"
     );
+    const searchTerm = document.getElementById("search").value.toLowerCase();
+    const selectedStatus = document.getElementById("status-filter").value;
+    const filteredApplications = applications.filter(application => {
+        const matchesSearch= (application.company.toLowerCase().includes(searchTerm) || application.role.toLowerCase().includes(searchTerm));
+        const matchesStatus = (selectedStatus === "" || application.status === selectedStatus);
+
+        return (matchesSearch && matchesStatus);
+    });
 
     container.innerHTML = "";
 
@@ -47,8 +55,14 @@ async function loadApplications() {
         `;
         return;
     }
+    if (filteredApplications.length === 0) {
+        container.innerHTML = `
+            <p>No applications match your search.</p>
+        `;
+        return;
+    }
 
-    applications.forEach(application => {
+    filteredApplications.forEach(application => {
         const card = document.createElement("div");
 
         card.classList.add("application-card");
@@ -77,6 +91,7 @@ async function loadApplications() {
 
         container.appendChild(card);
     });
+
 }
 
 
@@ -97,5 +112,7 @@ async function deleteApplication(id) {
     loadApplications();
 }
 
+document.getElementById("search").addEventListener("input", loadApplications);
+document.getElementById("status-filter").addEventListener("change", loadApplications);
 
 loadApplications();

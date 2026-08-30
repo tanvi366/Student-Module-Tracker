@@ -77,7 +77,20 @@ def delete_application(id):
     conn.execute("DELETE FROM applications WHERE id = ?", (id,))
     conn.commit()
     conn.close()
-    return jsonify({"message": "Application delteted"})
+    return jsonify({"message": "Application deleted"})
+
+@app.route("/api/applications/<int:id>", methods=["PUT"])
+def update_applications(id):
+    data = request.get_json()
+    conn = get_db_connection()
+    conn.execute("""
+        UPDATE applications SET company=?, role=?, location=?, status?, application_date=?, job_url=?, notes=? WHERE id=?
+    """,
+    (data["company"], data["role"], data["location"], data["status"], data["application_date"], data["job_url"], data["notes"], id
+    ))
+    conn.commit()
+    conn.close()
+    return jsonify({"message": "Application updated"})
 
 if __name__ == "__main__":
     init_db()
