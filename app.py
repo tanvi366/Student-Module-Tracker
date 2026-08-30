@@ -74,7 +74,7 @@ def create_application():
 @app.route("/api/applications/<int:id>", methods=["DELETE"])
 def delete_application(id):
     conn = get_db_connection()
-    conn.execute("DELETE FROM applications WHERE id = ?", (id.))
+    conn.execute("DELETE FROM applications WHERE id = ?", (id,))
     conn.commit()
     conn.close()
     return jsonify({"message": "Application delteted"})
