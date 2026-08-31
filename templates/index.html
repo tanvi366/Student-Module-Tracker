@@ -1,100 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
     <title>Student Career Tracker</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
+
 <body>
+
     <header>
         <h1>Student Career Tracker</h1>
         <p>Track your internships and job applications.</p>
     </header>
 
+
     <main>
+
+        <!-- =========================
+             DASHBOARD
+        ========================== -->
+
         <section class="dashboard">
+
             <div class="stat-card">
                 <h3>Total Applications</h3>
                 <p id="total-applications">0</p>
             </div>
+
             <div class="stat-card">
                 <h3>Interviews</h3>
                 <p id="interviews">0</p>
             </div>
+
             <div class="stat-card">
                 <h3>Offers</h3>
                 <p id="offers">0</p>
             </div>
+
         </section>
-        <section id="deadline-notifications" class="deadline-notifications">
-        </section>
-        <section>
-            <h2>Application Overview</h2>
-            <canvas id="status-chart"></canvas>
-        </section>
+
+
+        <!-- =========================
+             WARNINGS + CHART
+        ========================== -->
+
+        <div class="dashboard-content">
+
+            <!-- Deadline warnings -->
+
+            <section id="deadline-notifications"
+                     class="deadline-notifications">
+
+                <h2>Upcoming Deadlines</h2>
+
+            </section>
+
+
+            <!-- Application chart -->
+
+            <section class="chart-container">
+
+                <h2>Application Overview</h2>
+
+                <canvas id="status-chart"></canvas>
+
+            </section>
+
+        </div>
+
+
+        <!-- =========================
+             ADD APPLICATION
+        ========================== -->
+
         <section class="form-section">
+
             <h2>Add Application</h2>
+
             <form id="application-form">
-                <input type="text" id="company" placeholder="company" required>
-                <input type="text" id="role" placeholder="Job Role" required>
-                <input type="text" id="location" placeholder="Location">
-                <select id="status">
-                    <option value="Applied">Applied</option>
-                    <option value="Online Assessment">Online Assessment</option>
-                    <option value="Interview">Interview</option>
-                    <option value="Offer">Offer</option>
-                    <option value="Rejected">Rejected</option>
-                </select>
-                <label for="application_date">Application Date</label>
-                <input type="date" id="application-date" required>
-                <label for="deadline">Application Deadline</label>
-                <input type="date" id="deadline" required>
-                <input type="url" id="job-url" placeholder="Job posting URL (optional)">
-                <textarea id="notes" placeholder="Notes (optional)"></textarea>
-                <button type="submit">Add Application</button>
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="company">Company</label>
+
+                        <input
+                            type="text"
+                            id="company"
+                            placeholder="Company"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="role">Job Role</label>
+
+                        <input
+                            type="text"
+                            id="role"
+                            placeholder="Job Role"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="location">Location</label>
+
+                        <input
+                            type="text"
+                            id="location"
+                            placeholder="Location"
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+
+                        <select id="status">
+
+                            <option value="Applied">
+                                Applied
+                            </option>
+
+                            <option value="Online Assessment">
+                                Online Assessment
+                            </option>
+
+                            <option value="Interview">
+                                Interview
+                            </option>
+
+                            <option value="Offer">
+                                Offer
+                            </option>
+
+                            <option value="Rejected">
+                                Rejected
+                            </option>
+
+                        </select>
+                    </div>
+
+                </div>
+
+
+                <div class="form-row">
+
+                    <div class="form-group">
+                        <label for="application-date">
+                            Application Date
+                        </label>
+
+                        <input
+                            type="date"
+                            id="application-date"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="deadline">
+                            Application Deadline
+                        </label>
+
+                        <input
+                            type="date"
+                            id="deadline"
+                            required
+                        >
+                    </div>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="job-url">
+                        Job Posting URL
+                    </label>
+
+                    <input
+                        type="url"
+                        id="job-url"
+                        placeholder="https://..."
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="notes">
+                        Notes
+                    </label>
+
+                    <textarea
+                        id="notes"
+                        placeholder="Add any notes about this application..."
+                    ></textarea>
+
+                </div>
+
+
+                <button type="submit">
+                    Add Application
+                </button>
+
             </form>
+
         </section>
-        <div class="filters">
-            <input type="text" id="search" placeholder="Search company or role...">
-            <select id="status-filter">
 
-    <option value="">
-        All Statuses
-    </option>
 
-    <option value="Applied">
-        Applied
-    </option>
+        <!-- =========================
+             APPLICATION FILTERS
+        ========================== -->
 
-    <option value="Online Assessment">
-        Online Assessment
-    </option>
+        <section class="applications-section">
 
-    <option value="Interview">
-        Interview
-    </option>
+            <div class="applications-header">
 
-    <option value="Offer">
-        Offer
-    </option>
+                <div>
+                    <h2>Your Applications</h2>
+                    <p>Manage and track your applications.</p>
+                </div>
 
-    <option value="Rejected">
-        Rejected
-    </option>
+                <div class="filters">
 
-</select>
-        </div>
-        <h2>Your Applications</h2>
-        <div id="applications-container">
-            Loading applications...
-        </div>
+                    <input
+                        type="text"
+                        id="search"
+                        placeholder="Search company or role..."
+                    >
+
+
+                    <select id="status-filter">
+
+                        <option value="">
+                            All Statuses
+                        </option>
+
+                        <option value="Applied">
+                            Applied
+                        </option>
+
+                        <option value="Online Assessment">
+                            Online Assessment
+                        </option>
+
+                        <option value="Interview">
+                            Interview
+                        </option>
+
+                        <option value="Offer">
+                            Offer
+                        </option>
+
+                        <option value="Rejected">
+                            Rejected
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <!-- Applications generated by JavaScript -->
+
+            <div id="applications-container">
+                Loading applications...
+            </div>
+
+        </section>
+
     </main>
 
-        <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
+
 </html>

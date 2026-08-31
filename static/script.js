@@ -36,6 +36,14 @@ async function loadApplications() {
     const applications = await response.json();
     updateDeadlineNotifications(applications);
 
+    const statusColours = {
+    "Applied": "rgba(59, 130, 246, 0.2)",
+    "Online Assessment": "rgba(250, 204, 21, 0.2)",
+    "Interview": "rgba(168, 85, 247, 0.2)",
+    "Offer": "rgba(34, 197, 94, 0.2)",
+    "Rejected": "rgba(239, 68, 68, 0.2)"
+    };
+
     const container = document.getElementById(
         "applications-container"
     );
@@ -62,10 +70,11 @@ async function loadApplications() {
         `;
         return;
     }
+
     updateDashboard(applications);
     updateChart(applications);
     filteredApplications.forEach(application => {
-
+        const colour = statusColours[application.status];
         const  card = document.createElement("div");
 
         card.classList.add("application-card");
@@ -79,7 +88,7 @@ async function loadApplications() {
         📍 ${application.location || "No location"}
     </p>
 
-    <p class="status">
+    <p class="status" style="background-color: ${colour};">
         ${application.status}
     </p>
 

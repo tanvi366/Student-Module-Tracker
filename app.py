@@ -24,14 +24,13 @@ def init_db():
             notes TEXT
         )
     """)
+    try: 
+         conn.execute(" ALTER TABLE applications ADD COLUMN deadline TEXT")
+    except sqlite3.OperationalError:
+        pass
     conn.commit()
     conn.close()
 
-def alter_db():
-    conn = get_db_connection()
-    conn.execute(" ALTER TABLE applications ADD COLUMN deadline TEXT")
-    conn.commit()
-    conn.close()
 
 @app.route("/")
 def index():
