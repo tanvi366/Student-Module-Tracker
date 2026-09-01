@@ -84,8 +84,11 @@ async function loadApplications() {
     filteredApplications.forEach(application => {
         const colour = statusColours[application.status];
         const  card = document.createElement("div");
-
+        
         card.classList.add("application-card");
+        card.addEventListener("click", function(){
+            showApplicationDetails(application);
+        });
 
         card.innerHTML = `
             <h3>${application.company}</h3>
@@ -104,10 +107,10 @@ async function loadApplications() {
         Applied: ${application.application_date}
     </p>
 
-    <button class="edit-btn" onclick="editApplication(${application.id})">
+    <button class="edit-btn" onclick="event.stopPropagation(); editApplication(${application.id})">
         Edit
     </button>
-    <button class="delete-btn" onclick="deleteApplication(${application.id})">
+    <button class="delete-btn" onclick="event.stopPropagation(); deleteApplication(${application.id})">
         Delete
     </button>
         `;
@@ -205,6 +208,25 @@ function updateDeadlineNotifications(applications){
     });
 }
 
+function showApplicationDetails(application){
+    document.getElementById("modal-company").textContent = application.company;
+    document.getElementById("modal-role").textContent = application.role;
+    document.getElementById("modal-location").textContent = application.location || "Not specified";;
+    document.getElementById("modal-status").textContent = application.status;
+    document.getElementById("modal-application-date").textContent = application.application_date;
+    document.getElementById("modal-deadline").textContent = application.deadline || "Not specified";
+    document.getElementById("modal-notes").textContent = application.notes || "No notes added";
+    const jobURL = document.getElementById("modal-job-url");
+    if (application.job_url){
+        jobURL.href = application.job_url;
+        jobURL.textContent = "View Job Posting";
+    } else {
+        jobURL.removeAttribute("href");
+        jobURL.textContent = "No job URL provided";
+    }
+    document.getElementById("application-modal").style.display = "block";
+}
+
 async function editApplication(id){
     const response = await fetch("/api/applications");
     const applications = await response.json();
@@ -227,5 +249,16 @@ async function editApplication(id){
 
 document.getElementById("search").addEventListener("input", loadApplications);
 document.getElementById("status-filter").addEventListener("change", loadApplications);
+
+const modal = document.getElementById("application-modal");
+const closeModal = document.getElementById("close-modal");
+closeModal.addEventListener("click", function(){
+    modal.style.display = "none";
+});
+window.addEventListener("click", function(event){
+    if (event.target === modal){
+        modal.style.display = "none";
+    }
+});
 
 loadApplications();

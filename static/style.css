@@ -756,3 +756,129 @@ button:active {
         width: 100%;
     }
 }
+
+/* =========================================
+   MODAL
+========================================= */
+.modal {
+    display: none;
+
+    position: fixed;
+
+    z-index: 1000;
+
+    inset: 0;
+
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.55);
+
+    backdrop-filter: blur(4px);
+}
+
+
+/* Modal container */
+.modal-content {
+    position: relative;
+
+    width: 100%;
+    max-width: 600px;
+
+    margin: 8% auto;
+
+    padding: 28px;
+
+    background: var(--surface);
+
+    border: 1px solid var(--border);
+
+    border-radius: 14px;
+
+    box-shadow: var(--shadow-md);
+
+    color: var(--text);
+}
+
+
+/* Close button */
+.close-modal {
+    position: absolute;
+
+    top: 14px;
+    right: 16px;
+
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: var(--muted);
+
+    font-size: 24px;
+    line-height: 1;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease;
+}
+
+
+.close-modal:hover {
+    background: #f1f5f9;
+
+    color: var(--text);
+}
+
+
+/* Modal details */
+.modal-details p {
+    margin: 12px 0;
+
+    color: var(--text-secondary);
+
+    line-height: 1.5;
+}
+
+
+/* Optional modal heading */
+.modal-content h2,
+.modal-content h3 {
+    margin-top: 0;
+
+    margin-bottom: 20px;
+
+    color: var(--text);
+
+    font-size: 1.25rem;
+
+    font-weight: 700;
+}
+
+
+/* Notes */
+#modal-notes {
+    white-space: pre-wrap;
+
+    padding: 14px 16px;
+
+    margin-top: 8px;
+
+    background: #f8fafc;
+
+    border: 1px solid var(--border);
+
+    border-radius: 8px;
+
+    color: var(--text-secondary);
+
+    line-height: 1.6;
+}
