@@ -34,17 +34,13 @@ A full-stack web application that helps students track job and internship applic
 
 ## Screenshots
 
-*Add screenshots of your application here.*
-
-For example:
-
 ### Dashboard
 
 ![Dashboard Screenshot](screenshots/dashboard.png)
 
 ### Application Tracker
 
-![Applications Screenshot](screenshots/applications.png)
+![Applications Screenshot](screenshots/application-tracker.png)
 
 ## Installation
 
