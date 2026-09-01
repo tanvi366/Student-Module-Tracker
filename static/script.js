@@ -14,8 +14,14 @@ form.addEventListener("submit", async function(event) {
         notes: document.getElementById("notes").value
     };
 
-    const response = await fetch("/api/applications", {
-        method: "POST",
+    let url = "/api/applications";
+    let method = "POST";
+    if (editingId !== null){
+        url = `/api/applications/${editingId}`;
+        method = "PUT";
+    }
+    const response = await fetch(url, {
+        method: method,
         headers: {
             "Content-Type": "application/json"
         },
@@ -24,6 +30,8 @@ form.addEventListener("submit", async function(event) {
 
     if (response.ok) {
         form.reset();
+        editingId = null;
+        document.querySelector("#application-form button[type='submit']").textContent = "Add Application";
         loadApplications();
     } else {
         alert("Something went wrong!");
@@ -96,7 +104,10 @@ async function loadApplications() {
         Applied: ${application.application_date}
     </p>
 
-    <button onclick="deleteApplication(${application.id})">
+    <button class="edit-btn" onclick="editApplication(${application.id})">
+        Edit
+    </button>
+    <button class="delete-btn" onclick="deleteApplication(${application.id})">
         Delete
     </button>
         `;
@@ -192,6 +203,26 @@ function updateDeadlineNotifications(applications){
         </div>`;
 
     });
+}
+
+async function editApplication(id){
+    const response = await fetch("/api/applications");
+    const applications = await response.json();
+    const application = applications.find(application => application.id === id);
+    if (!application){return;}
+    document.getElementById("company").value = application.company;
+    document.getElementById("role").value = application.role;
+    document.getElementById("location").value = application.location || "";
+    document.getElementById("status").value = application.status;
+    document.getElementById("application-date").value = application.application_date;
+    document.getElementById("deadline").value = application.deadline || "";
+    document.getElementById("job-url").value = application.job_url || "";
+    document.getElementById("notes").value = application.notes || "";
+
+    editingId = id;
+    document.querySelector("#application-form button[type='submit']").textContent = "Update Application";
+
+    document.querySelector(".form-section").scrollIntoView({behavior: "smooth"});
 }
 
 document.getElementById("search").addEventListener("input", loadApplications);

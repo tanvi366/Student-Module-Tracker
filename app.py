@@ -90,9 +90,9 @@ def update_applications(id):
     data = request.get_json()
     conn = get_db_connection()
     conn.execute("""
-        UPDATE applications SET company=?, role=?, location=?, status?, application_date=?, job_url=?, notes=? WHERE id=?
+        UPDATE applications SET company=?, role=?, location=?, status=?, application_date=?, job_url=?, notes=?, deadline=? WHERE id=?
     """,
-    (data["company"], data["role"], data["location"], data["status"], data["application_date"], data["job_url"], data["notes"], id
+    (data["company"], data["role"], data["location"], data["status"], data["application_date"], data["job_url"], data["notes"], data["deadline"], id
     ))
     conn.commit()
     conn.close()
