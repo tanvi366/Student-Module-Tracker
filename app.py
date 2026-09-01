@@ -101,4 +101,4 @@ def update_applications(id):
 if __name__ == "__main__":
     init_db()
     #alter_db()
-    app.run(debug=True)
+    app.run()
