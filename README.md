@@ -6,6 +6,7 @@ A full-stack web application that helps students track job and internship applic
 
 * Add job and internship applications
 * View all saved applications
+* View individual application details
 * Edit existing applications
 * Delete applications
 * Sort applications by company, role, or status
