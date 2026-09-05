@@ -14,7 +14,8 @@ A full-stack web application that helps students track job and internship applic
 * Deadline alerts for applications due within three days
 * Interactive doughnut chart showing application status distribution
 * Persistent data storage using SQLite
-* Export to CSV
+* CSV export for external analysis and data sharing
+* Excel export generating a complete application table and status-based summary report
 
 ## Tech Stack
 
@@ -139,6 +140,16 @@ Applications can be sorted by:
 * Company
 * Role
 * Status
+
+### Reporting and Data Export
+
+The application allows users to export their application records as either CSV or Excel files.
+
+The Excel export contains:
+* A complete table of application records
+* A summary report categorising applications by status
+
+This allows users to review apl=plication progress, analyse outcomes and reuse their data outside the web application without manually copying records. 
 
 ## What I Learned
 
