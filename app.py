@@ -1,5 +1,7 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, make_response
 import sqlite3
+import csv
+import io
 app = Flask(__name__)
 
 DATABASE = "career_tracker.db"
@@ -55,7 +57,12 @@ def create_application():
     data = request.get_json()
 
     company = data.get("company")
+    if not company or not company.strip():
+        return "Company name is required", 400
+
     role = data.get("role")
+    if not role or not role.strip():
+        return "Role is required", 400
     location = data.get("location")
     status = data.get("status", "Applied")
     application_date = data.get("application_date")
@@ -97,6 +104,22 @@ def update_applications(id):
     conn.commit()
     conn.close()
     return jsonify({"message": "Application updated"})
+
+@app.route("/export/csv")
+def export_csv():
+    conn = get_db_connection()
+    applications = conn.execute("""SELECT * FROM applications ORDER BY application_date DESC""").fetchall()
+    print("APPLICATIONS:", applications)
+    conn.close()
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Company", "Role", "Location", "Status", "Application Date", "Deadline", "Job URL", "Notes" ])
+    for application in applications:
+        writer.writerow([application["company"], application["role"], application["location"], application["status"], application["application_date"], application["deadline"], application["job_url"], application["notes"]])
+    response = make_response(output.getvalue())
+    response.headers["Content-Disposition"] = ("attachment; filename=career_tracker_export.csv")
+    response.headers["Content-Type"] = "text/csv"
+    return response
 
 if __name__ == "__main__":
     init_db()
