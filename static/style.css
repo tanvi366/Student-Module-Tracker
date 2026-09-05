@@ -755,6 +755,64 @@ button:active {
     .application-card button {
         width: 100%;
     }
+     /* =========================================
+    EXPORT BUTTONS
+ ========================================= */
+
+.export-buttons {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 24px 0;
+}
+
+
+.export-button {
+    display: inline-block;
+
+    padding: 12px 18px;
+
+    background: var(--primary);
+    color: white;
+
+    border: 0;
+    border-radius: 10px;
+
+    font: inherit;
+    font-weight: 650;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.export-button:hover {
+    background: var(--primary-dark);
+
+    color: white;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 14px
+        rgba(79, 70, 229, 0.25);
+}
+
+
+.export-button:active {
+    transform: translateY(0);
+}
+
 }
 
 /* =========================================
@@ -882,16 +940,24 @@ button:active {
 
     line-height: 1.6;
 }
+ /* =========================================
+    EXPORT BUTTONS
+ ========================================= */
 
-/* =========================================
-   EXPORT BUTTON
-========================================= */
+.export-buttons {
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 24px 0;
+}
+
 
 .export-button {
-    display: block;
-    width: fit-content;
-
-    margin: 24px auto;
+    display: inline-block;
 
     padding: 12px 18px;
 
