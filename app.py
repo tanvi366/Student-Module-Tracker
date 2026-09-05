@@ -1,7 +1,11 @@
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response, send_file
 import sqlite3
 import csv
 import io
+from io import BytesIO
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+from openpyxl.chart import BarChart, Reference
 app = Flask(__name__)
 
 DATABASE = "career_tracker.db"
@@ -109,7 +113,6 @@ def update_applications(id):
 def export_csv():
     conn = get_db_connection()
     applications = conn.execute("""SELECT * FROM applications ORDER BY application_date DESC""").fetchall()
-    print("APPLICATIONS:", applications)
     conn.close()
     output = io.StringIO()
     writer = csv.writer(output)
@@ -120,6 +123,73 @@ def export_csv():
     response.headers["Content-Disposition"] = ("attachment; filename=career_tracker_export.csv")
     response.headers["Content-Type"] = "text/csv"
     return response
+
+@app.route("/export/excel")
+def export_excel():
+    conn = get_db_connection()
+    applications = conn.execute("""SELECT * FROM applications ORDER BY application_date DESC""").fetchall()
+    conn.close()
+    workbook = Workbook()
+    sheet = workbook.active
+    sheet.title = "Applications"
+    sheet["A1"] = "Career Tracker Report"
+
+    sheet["A1"].font = Font(size=20, bold=True, color="FFFFFF")
+    sheet["A2"].alignment = Alignment(horizontal="center")
+    sheet.merge_cells("A1:H1")
+    headers =["Company", "Role", "Location", "Status", "Application Date", "Deadline", "Job URL", "Notes" ]
+    for column, header in enumerate(headers, start=1):
+        cell = sheet.cell(row=3, column = column)
+        cell.value = header
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill("solid", fgColor="4F46E5")
+        cell.alignment = Alignment(horizontal = "center")
+    for row, application in enumerate(applications, start=4):
+        sheet.cell(row=row, column=1, value=application["company"])
+        sheet.cell(row=row, column=2, value=application["role"])
+        sheet.cell(row=row, column=3, value=application["location"])
+        sheet.cell(row=row, column=4, value=application["status"])
+        sheet.cell(row=row, column=5, value=application["application_date"])
+        sheet.cell(row=row, column=6, value=application["deadline"])
+        sheet.cell(row=row, column=7, value=application["job_url"])
+        sheet.cell(row=row, column=8, value=application["notes"])
+
+    sheet.column_dimensions["A"].width = 22
+    sheet.column_dimensions["B"].width = 28
+    sheet.column_dimensions["C"].width = 20
+    sheet.column_dimensions["D"].width = 18
+    sheet.column_dimensions["E"].width = 22
+    sheet.column_dimensions["F"].width = 22
+    sheet.column_dimensions["G"].width = 35
+    sheet.column_dimensions["H"].width = 40
+
+    summary = workbook.create_sheet("Summary")
+    summary["A1"] = "Career Tracker Summary"
+    summary["A1"].font = Font(size=20, bold=True)
+    summary["A3"] = "Status"
+    summary["B3"] = "Applications"
+    summary["A3"].font = Font(bold=True)
+    summary["B3"].font = Font(bold=True)
+    statuses = ["Applied", "Online Assessment", "Interview", "Offer", "Rejected"]
+    for row, status in enumerate(statuses, start=4):
+        summary.cell(row=row, column=1, value=status)
+        count=sum(1 for application in applications if application["status"]==status)
+        summary.cell(row=row, column=2, value=count)
+    summary["A9"] = "Total Applications"
+    summary["B9"] = len(applications)
+
+    summary["A9"].font = Font(bold=True)
+    summary["B9"].font = Font(bold=True)
+
+    summary.column_dimensions["A"].width = 25
+    summary.column_dimensions["B"].width = 20
+    
+    sheet.freeze_panes = "A4"
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    return send_file(output, as_attachment=True, download_name="career_tracker_report.xlsx", mimetype=("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
 
 if __name__ == "__main__":
     init_db()
