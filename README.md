@@ -14,6 +14,7 @@ A full-stack web application that helps students track job and internship applic
 * Deadline alerts for applications due within three days
 * Interactive doughnut chart showing application status distribution
 * Persistent data storage using SQLite
+* Export to CSV
 
 ## Tech Stack
 
